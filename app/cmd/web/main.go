@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/nolanhea/snippetbox/internal/models"
+
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -17,8 +19,9 @@ type config struct {
 }
 
 type application struct {
-	errLog  *log.Logger
-	infoLog *log.Logger
+	errLog   *log.Logger
+	infoLog  *log.Logger
+	snippets *models.SnippetModel
 }
 
 type MySqlConfig struct {
@@ -58,8 +61,9 @@ func main() {
 	defer db.Close()
 
 	app := &application{
-		errLog:  errorLog,
-		infoLog: infoLog,
+		errLog:   errorLog,
+		infoLog:  infoLog,
+		snippets: &models.SnippetModel{DB: db},
 	}
 
 	mux := app.routes()
