@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"text/template"
 
 	"github.com/nolanhea/snippetbox/internal/models"
 
@@ -19,9 +20,10 @@ type config struct {
 }
 
 type application struct {
-	errLog   *log.Logger
-	infoLog  *log.Logger
-	snippets *models.SnippetModel
+	errLog        *log.Logger
+	infoLog       *log.Logger
+	snippets      *models.SnippetModel
+	templateCache map[string]*template.Template
 }
 
 type MySqlConfig struct {
@@ -60,10 +62,15 @@ func main() {
 	}
 	defer db.Close()
 
+	templateCache, err := newTemplateCache()
+	if err != nil {
+		errorLog.Fatal(err)
+	}
 	app := &application{
-		errLog:   errorLog,
-		infoLog:  infoLog,
-		snippets: &models.SnippetModel{DB: db},
+		errLog:        errorLog,
+		infoLog:       infoLog,
+		snippets:      &models.SnippetModel{DB: db},
+		templateCache: templateCache,
 	}
 
 	mux := app.routes()
