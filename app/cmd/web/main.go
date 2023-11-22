@@ -56,7 +56,7 @@ func main() {
 		conf.Host, conf.Port, conf.DbName,
 	)
 
-	db, err := openDB(dsn)
+	db, err := openDB(dsn + "?parseTime=true")
 	if err != nil {
 		errorLog.Fatal(err)
 	}
