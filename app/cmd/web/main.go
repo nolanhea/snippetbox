@@ -28,6 +28,7 @@ type application struct {
 	infoLog        *log.Logger
 	snippets       *models.SnippetModel
 	templateCache  map[string]*template.Template
+	users          *models.UserModel
 	formDecoder    *form.Decoder
 	sessionManager *scs.SessionManager
 }
@@ -84,6 +85,7 @@ func main() {
 		templateCache:  templateCache,
 		formDecoder:    formDecoder,
 		sessionManager: sessionManager,
+		users:          &models.UserModel{DB: db},
 	}
 	tlsConfig := &tls.Config{
 		CurvePreferences: []tls.CurveID{tls.X25519, tls.CurveP256},
