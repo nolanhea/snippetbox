@@ -1,10 +1,10 @@
--- Create a new UTF-8 `snippetbox` database.
+
 CREATE DATABASE snippetbox CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- Switch to using the `snippetbox` database.
+
 USE snippetbox;
 
--- Create a `snippets` table.
+
 CREATE TABLE snippets (
     id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(100) NOT NULL,
@@ -13,10 +13,10 @@ CREATE TABLE snippets (
     expires DATETIME NOT NULL
 );
 
--- Add an index on the created column.
+
 CREATE INDEX idx_snippets_created ON snippets(created);
 
--- Add some dummy records (which we'll use in the next couple of chapters).
+
 INSERT INTO snippets (title, content, created, expires) VALUES (
     'An old silent pond',
     'An old silent pond...\nA frog jumps into the pond,\nsplash! Silence again.\n\n– Matsuo Bashō',
@@ -40,5 +40,13 @@ INSERT INTO snippets (title, content, created, expires) VALUES (
 
 CREATE USER 'web'@'localhost';
 GRANT SELECT, INSERT, UPDATE, DELETE ON snippetbox.* TO 'web'@'localhost';
--- Important: Make sure to swap 'pass' with a password of your own choosing.
+
 ALTER USER 'web'@'localhost' IDENTIFIED BY 'pass';
+
+CREATE TABLE sessions (
+    token CHAR(43) PRIMARY KEY,
+    data BLOB NOT NULL,
+    expiry TIMESTAMP(6) NOT NULL
+);
+
+CREATE INDEX sessions_expiry_idx ON sessions (expiry);
